@@ -1,6 +1,5 @@
 import express from 'express';
 import cors from 'cors';
-import pino from 'pino-http';
 import 'dotenv/config';
 import { connectMongoDB } from './db/connectMongoDB.js';
 import { logger } from './middleware/logger.js';
@@ -14,21 +13,7 @@ const PORT = process.env.PORT ?? 3000;
 app.use(logger);
 app.use(express.json());
 app.use(cors());
-app.use(
-    pino({
-        level: 'info',
-        transport: {
-            target: 'pino-pretty',
-            options: {
-                colorise: true,
-                translateTime: 'HH:MM:ss',
-                ignore: 'pid,hostname',
-                messageFormat: '{req.method} {req.url} {res.statusCode} - {responseTime}ms',
-                hideObject: true,
-            },
-        },
-    }),
-);
+
 
 app.use(notesRoutes);
 
