@@ -1,19 +1,33 @@
-### Express-додаток для роботи з колекцією нотаток
+### Express-додаток для роботи з колекцією нотаток версія 03
 
-працювати з базою даних https://mongoosejs.com/
+Викоритсовується:
+
+- для безпеки
+
+```
+npm i helmet
+```
+
+- бібліотека щоб працювати з базою даних https://mongoosejs.com/
 
 ```
 npm install mongoose
 ```
 
-Щоб бачити всі запити, підключимо pino-http https://github.com/pinojs/pino-http?utm_source=chatgpt.com
+- бібліотека щоб бачити всі запити, підключимо pino-http https://github.com/pinojs/pino-http?utm_source=chatgpt.com
 
 ```
 npm i pino-http --save
 ```
 
-дозволяє створювати помилки з потрібним статусом і повідомленням https://www.npmjs.com/package/http-errors?utm_source=chatgpt.com
+- бібліотека дозволяє створювати помилки з потрібним статусом і повідомленням https://www.npmjs.com/package/http-errors?utm_source=chatgpt.com
 
 ```
 npm install http-errors
+```
+
+- мову Joi для опису схем об’єктів і валідатор та celebrate це бібліотека що інтегрує Joi безпосередньо у маршрути Express https://www.npmjs.com/package/celebrate
+
+```
+npm i celebrate
 ```
