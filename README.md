@@ -31,3 +31,15 @@ npm install http-errors
 ```
 npm i celebrate
 ```
+
+- Використання bcrypt для безпечного хешування паролів
+
+```
+npm i bcrypt
+```
+
+- middleware cookie-parser підключаємо, так як express не парсить cookies автоматично з req
+
+```
+npm i cookie-parser
+```
