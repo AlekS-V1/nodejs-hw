@@ -43,3 +43,33 @@ npm i bcrypt
 ```
 npm i cookie-parser
 ```
+
+- функціонал відправлення листів
+
+```
+npm install nodemailer
+```
+
+- бібліотека jsonwebtoken для роботи з JWT
+
+```
+npm i jsonwebtoken
+```
+
+- Створюємо шаблон листа шаблонізатором
+
+```
+npm i handlebars
+```
+
+- middleware multer для завантаження зображень
+
+```
+npm i multer
+```
+
+- хмарний сервіс для керування зображеннями та відео
+
+```
+npm install cloudinary
+```

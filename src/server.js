@@ -10,6 +10,7 @@ import { errors } from 'celebrate';
 import helmet from 'helmet';
 import authRoutes from './routes/authRoutes.js';
 import cookieParser from 'cookie-parser';
+import userRoutes from './routes/userRoutes.js';
 
 const app = express();
 app.use(helmet());
@@ -22,6 +23,7 @@ app.use(cookieParser());
 
 app.use(authRoutes);
 app.use(notesRoutes);
+app.use(userRoutes);
 
 app.use(notFoundHandler);
 
