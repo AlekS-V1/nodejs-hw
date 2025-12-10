@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import 'dotenv/config';
+import swaggerUI from 'swagger-ui-express';
 import { connectMongoDB } from './db/connectMongoDB.js';
 import { logger } from './middleware/logger.js';
 import { notFoundHandler } from './middleware/notFoundHandler.js';
@@ -11,6 +12,7 @@ import helmet from 'helmet';
 import authRoutes from './routes/authRoutes.js';
 import cookieParser from 'cookie-parser';
 import userRoutes from './routes/userRoutes.js';
+import swaggerSpec from './config/swagger.js';
 
 const app = express();
 app.use(helmet());
@@ -20,6 +22,8 @@ app.use(logger);
 app.use(express.json());
 app.use(cors());
 app.use(cookieParser());
+
+app.use('/api/docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
 app.use(authRoutes);
 app.use(notesRoutes);
@@ -34,5 +38,5 @@ app.use(errorHandler);
 await connectMongoDB();
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
