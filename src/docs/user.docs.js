@@ -4,7 +4,7 @@
  *   patch:
  *     tags:
  *       - User
- *     summary: Update current user's avatar
+ *     summary: Update the current user's avatar
  *     security:
  *       - bearerAuth: []
  *     requestBody:

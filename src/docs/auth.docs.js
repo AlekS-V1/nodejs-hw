@@ -21,8 +21,27 @@
  *     responses:
  *       '201':
  *         description: User registered successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                  email:
+ *                    type: string
+ *                    example: user@example.com
+ *                  password:
+ *                    type: string
+ *                    example: password123
  *       '400':
- *         description: Bad Request
+ *         description: User already exists
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User exists
  */
 
 /**
@@ -41,8 +60,10 @@
  *             properties:
  *               email:
  *                 type: string
+ *                 example: user@example.com
  *               password:
  *                 type: string
+ *                 example: password123
  *     responses:
  *       '200':
  *         description: Login successful, returns tokens
@@ -51,10 +72,25 @@
  *             schema:
  *               type: object
  *               properties:
- *                 accessToken:
+ *                  username:
+ *                    type: string
+ *                    example: user@example.com
+ *                  email:
+ *                    type: string
+ *                    example: user@example.com
+ *                  avatar:
+ *                    type: string
+ *                    example: https://example.com/avatar.jpg
+ *       '401':
+ *         description: Invalid credentials or user not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
  *                   type: string
- *                 refreshToken:
- *                   type: string
+ *                   example: Invalid credentials
  */
 
 /**
@@ -63,22 +99,38 @@
  *   post:
  *     tags:
  *       - Auth
- *     summary: Refresh access token
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               refreshToken:
- *                 type: string
- *                 example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *     summary: Refresh the current session tokens
  *     responses:
  *       '200':
- *         description: New access token issued
+ *         description: Tokens refreshed successfully
+ *         content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: Session refreshed successfully
+ *       '400':
+ *         description: No active session found
+ *         content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: No active session found
  *       '401':
  *         description: Invalid or expired refresh token
+ *         content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: Invalid or expired token
  */
 
 /**
@@ -88,13 +140,19 @@
  *     tags:
  *       - Auth
  *     summary: Logout user and invalidate session
- *     requestBody:
- *       required: false
  *     responses:
  *       '200':
- *         description: User logged out successfully
- *       '401':
- *         description: Unauthorized
+ *         description: Successfully logged out
+ *       '400':
+ *         description: No active session found
+ *         content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: No active session found
  */
 
 /**
@@ -138,7 +196,7 @@
  *               resetToken:
  *                 type: string
  *                 example: 123456abcdef
- *               newPassword:
+ *               password:
  *                 type: string
  *                 example: NewStrongPass456!
  *     responses:

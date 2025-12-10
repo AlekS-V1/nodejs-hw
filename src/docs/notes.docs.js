@@ -4,12 +4,95 @@
  *   get:
  *     tags:
  *       - Note
- *     summary: Get all notes
+ *     summary: Get all notes with optional search, filter, and pagination
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Search text for note title or content
+ *       - in: query
+ *         name: tag
+ *         schema:
+ *           type: string
+ *           enum:
+ *             - Work
+ *             - Personal
+ *             - Meeting
+ *             - Shopping
+ *             - Ideas
+ *             - Travel
+ *             - Finance
+ *             - Health
+ *             - Important
+ *             - Todo
+ *         description: Filter notes by tag
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number
+ *       - in: query
+ *         name: perPage
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Notes per page
  *     responses:
  *       '200':
  *         description: List of notes
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 notes:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: string
+ *                         example: clty1kn9u0000hnq9bopx9h8b
+ *                       title:
+ *                         type: string
+ *                         example: Grocery list
+ *                       content:
+ *                         type: string
+ *                         example: Milk, eggs, bread
+ *                       createdAt:
+ *                         type: string
+ *                         format: date-time
+ *                         example: 2024-05-05T10:15:00Z
+ *                       updatedAt:
+ *                         type: string
+ *                         format: date-time
+ *                         example: 2024-05-06T12:30:00Z
+ *                       userId:
+ *                         type: string
+ *                         example: clty1k1230000hnq9bopx9h8a
+ *                       tag:
+ *                         type: string
+ *                         enum:
+ *                           - Work
+ *                           - Personal
+ *                           - Meeting
+ *                           - Shopping
+ *                           - Ideas
+ *                           - Travel
+ *                           - Finance
+ *                           - Health
+ *                           - Important
+ *                           - Todo
+ *                         example: Todo
+ *                 totalPages:
+ *                   type: integer
+ *                   example: 5
+ *       '401':
+ *         description: Unauthorized — missing or invalid access token
  *         content:
  *           application/json:
  *             schema:
@@ -17,10 +100,9 @@
  *               items:
  *                 type: object
  *                 properties:
- *                   id:
+ *                   message:
  *                     type: string
- *                   description:
- *                     type: string
+ *                     example: Unauthorized
  */
 
 /**
@@ -29,7 +111,7 @@
  *   get:
  *     tags:
  *       - Note
- *     summary: Get note by ID
+ *     summary: Get a single note by ID
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -41,7 +123,7 @@
  *         description: ID of the note
  *     responses:
  *       '200':
- *         description: Note found
+ *         description: The note
  *         content:
  *           application/json:
  *             schema:
@@ -49,10 +131,37 @@
  *               properties:
  *                 id:
  *                   type: string
- *                 description:
+ *                   example: clty1kn9u0000hnq9bopx9h8b
+ *                 title:
  *                   type: string
+ *                   example: Grocery list
+ *                 content:
+ *                   type: string
+ *                   example: Milk, eggs, bread
+ *                 createdAt:
+ *                   type: string
+ *                   format: date-time
+ *                   example: 2024-05-05T10:15:00Z
+ *                 updatedAt:
+ *                   type: string
+ *                   format: date-time
+ *                   example: 2024-05-06T12:30:00Z
+ *                 userId:
+ *                   type: string
+ *                   example: clty1k1230000hnq9bopx9h8a
+ *                 tag:
+ *                   type: string
+ *                   example: Todo
  *       '404':
  *         description: Note not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Note not found
  */
 
 /**
@@ -61,7 +170,7 @@
  *   post:
  *     tags:
  *       - Note
- *     summary: Create a note
+ *     summary: Create a new note
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -71,14 +180,66 @@
  *           schema:
  *             type: object
  *             properties:
- *               description:
+ *               title:
  *                 type: string
- *                 example: Buy a book
+ *                 example: Title your note
+ *               content:
+ *                 type: string
+ *                 example: Text your note
+ *               tag:
+ *                 type: string
+ *                 example: Work
  *     responses:
  *       '201':
- *         description: Created
+ *         description: Created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                   example: clty1kn9u0000hnq9bopx9h8b
+ *                 title:
+ *                   type: string
+ *                   example: Grocery list
+ *                 content:
+ *                   type: string
+ *                   example: Milk, eggs, bread
+ *                 createdAt:
+ *                   type: string
+ *                   format: date-time
+ *                   example: 2024-05-05T10:15:00Z
+ *                 updatedAt:
+ *                   type: string
+ *                   format: date-time
+ *                   example: 2024-05-06T12:30:00Z
+ *                 userId:
+ *                   type: string
+ *                   example: clty1k1230000hnq9bopx9h8a
+ *                 tag:
+ *                   type: string
+ *                   example: Todo
  *       '400':
- *         description: Bad Request
+ *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Title is required
+ *       '401':
+ *         description: Unauthorized — missing or invalid access token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized
  */
 
 /**
@@ -87,7 +248,7 @@
  *   delete:
  *     tags:
  *       - Note
- *     summary: Delete note by ID
+ *     summary: Delete a note by ID
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -99,9 +260,55 @@
  *         description: ID of the note
  *     responses:
  *       '200':
- *         description: Note deleted successfully
+ *         description: Updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                   example: clty1kn9u0000hnq9bopx9h8b
+ *                 title:
+ *                   type: string
+ *                   example: Grocery list
+ *                 content:
+ *                   type: string
+ *                   example: Milk, eggs, bread
+ *                 createdAt:
+ *                   type: string
+ *                   format: date-time
+ *                   example: 2024-05-05T10:15:00Z
+ *                 updatedAt:
+ *                   type: string
+ *                   format: date-time
+ *                   example: 2024-05-06T12:30:00Z
+ *                 userId:
+ *                   type: string
+ *                   example: clty1k1230000hnq9bopx9h8a
+ *                 tag:
+ *                   type: string
+ *                   example: Todo
+ *       '403':
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized to update this note
  *       '404':
  *         description: Note not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Note not found
  */
 
 /**
@@ -110,7 +317,7 @@
  *   patch:
  *     tags:
  *       - Note
- *     summary: Update note by ID
+ *     summary: Update an existing note by ID
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -127,14 +334,64 @@
  *           schema:
  *             type: object
  *             properties:
- *               description:
+ *               title:
  *                 type: string
- *                 example: Updated note text
+ *                 example: Updated Title
+ *               content:
+ *                 type: string
+ *                 example: Updated content here
+ *               tag:
+ *                 type: string
+ *                 example: Work
  *     responses:
  *       '200':
- *         description: Note updated successfully
- *       '400':
- *         description: Bad Request
+ *         description: Updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                   example: clty1kn9u0000hnq9bopx9h8b
+ *                 title:
+ *                   type: string
+ *                   example: Grocery list
+ *                 content:
+ *                   type: string
+ *                   example: Milk, eggs, bread
+ *                 createdAt:
+ *                   type: string
+ *                   format: date-time
+ *                   example: 2024-05-05T10:15:00Z
+ *                 updatedAt:
+ *                   type: string
+ *                   format: date-time
+ *                   example: 2024-05-06T12:30:00Z
+ *                 userId:
+ *                   type: string
+ *                   example: clty1k1230000hnq9bopx9h8a
+ *                 tag:
+ *                   type: string
+ *                   example: Todo
+ *       '403':
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized to update this note
  *       '404':
  *         description: Note not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Note not found
  */
